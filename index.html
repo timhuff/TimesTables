@@ -1,0 +1,150 @@
+<html>
+
+<head>
+  <style>
+    body {
+      text-align: center;
+    }
+
+    #timer {
+      font-size: 48;
+    }
+
+    #question {
+      font-size: 256;
+    }
+
+    #answer {
+      font-size: 64;
+      text-align: center;
+    }
+
+    #timesUp {
+      display: none;
+      color: red;
+      font-size: 512;
+    }
+
+    .timesUp {
+      display: none;
+    }
+
+    .timesUp #timesUp {
+      display: block !important;
+    }
+  </style>
+</head>
+
+<body>
+  <span id="timer">3:20</span><br />
+  <span id="question"></span><br />
+  <input id="answer" autocomplete="off" />
+  <input id="restart" type="submit" value="restart" style="display:none" />
+</body>
+<script>
+  function isNumeric(n) {
+    return !isNaN(parseInt(n)) && isFinite(n);
+  }
+  var $timer = document.getElementById("timer")
+  var $question = document.getElementById("question")
+  var $answer = document.getElementById("answer")
+
+  let finalTranscript = '';
+  let recognition = new (window.webkitSpeechRecognition || window.SpeechRecognition)();
+
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 10;
+  recognition.continuous = true;
+
+  var nums = {
+    "won": 1,
+    "one": 1,
+    "two": 2,
+    "three": 3,
+    "four": "4",
+    "for": "4",
+    "five": 5,
+    "sex": 6,
+    "six": 6,
+    "seven": 7,
+    "ate": 8,
+    "hey": 8,
+    "eight": 8,
+    "nine": 9,
+  }
+
+  var lastAnswer = null
+  recognition.onresult = (event) => {
+    var results = event.results[event.results.length - 1]
+    console.log(results)
+    if (results.isFinal) return
+    for (let i = 0; i < results.length; i++) {
+      var transcript = results[i].transcript.trim(' ').split(' ').slice(-1)[0];
+      if (nums[transcript]) transcript = "" + nums[transcript]
+      if (lastAnswer == transcript) continue
+      if (isNumeric(transcript)) {
+        $answer.value = transcript;
+        lastAnswer = transcript;
+        $answer.focus()
+      }
+    }
+  }
+  recognition.start();
+
+  var timeLeft = 200
+  var timer = setInterval(function () {
+    timeLeft = timeLeft - 1;
+    $timer.innerHTML = Math.floor(timeLeft / 60) + ":" + (timeLeft % 60)
+    if (timeLeft <= 0) {
+      $timer.innerHTML = "<span style='color:red'>Time's Up!</span>"
+      clearInterval(timer)
+    }
+  }, 1000)
+  var questions = []
+  for (var x = 1; x < 10; x++) {
+    for (var y = 1; y <= x; y++) {
+      var question = { answer: x * y }
+      if (Math.random() < 0.5) {
+        question.text = x + ' x ' + y
+      } else {
+        question.text = y + ' x ' + x
+      }
+      questions.push(question)
+    }
+  }
+  for (var i = 0; i < questions.length; i++) {
+    var j = Math.floor(Math.random() * (i + 1))
+    var temp = questions[i]
+    questions[i] = questions[j]
+    questions[j] = temp
+  }
+  var question = null
+  function nextQuestion() {
+    if (questions.length === 0) {
+      clearInterval(timer)
+      $answer.style = "display: none;"
+      $question.innerHTML = "Good Job!!"
+      $question.style = "color:green"
+    } else {
+      question = questions.pop()
+      $question.innerHTML = question.text
+      $answer.value = ''
+    }
+  }
+  nextQuestion()
+  function checkAnswer() {
+    if (!$answer.value) return
+    if (parseInt($answer.value) === question.answer) {
+      nextQuestion()
+    } else {
+      clearInterval(timer)
+      $timer.innerHTML = "<span style='color:red;font-size:128;'>" + question.text + " = " + question.answer + "</span>(not " + $answer.value + ")"
+      $answer.style = "display:none;"
+    }
+  }
+  $answer.addEventListener("keydown", function () {
+    checkAnswer()
+  })
+</script>
+
+</html>

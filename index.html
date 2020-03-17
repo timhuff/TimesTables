@@ -94,7 +94,7 @@
   var timeLeft = 200
   var timer = setInterval(function () {
     timeLeft = timeLeft - 1;
-    $timer.innerHTML = Math.floor(timeLeft / 60) + ":" + (timeLeft % 60)
+    $timer.innerHTML = Math.floor(timeLeft / 60) + ":" + ("00" + (timeLeft % 60)).slice(-2)
     if (timeLeft <= 0) {
       $timer.innerHTML = "<span style='color:red'>Time's Up!</span>"
       clearInterval(timer)

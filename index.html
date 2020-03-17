@@ -42,7 +42,7 @@
 </head>
 
 <body>
-  <span id="timer">3:20</span><br />
+  <span id="timer">0:10</span><br />
   <span id="question"></span><br />
   <span id="progress"></span><br />
   <input id="answer" autocomplete="off" />
@@ -92,7 +92,7 @@
       if (nums[transcript]) transcript = "" + nums[transcript]
       if (lastAnswer == transcript) continue
       if (isNumeric(transcript)) {
-        $answer.value = transcript;
+        $answer.value = transcript.slice(-2);
         lastAnswer = transcript;
         $answer.focus()
       }
@@ -100,7 +100,7 @@
   }
   recognition.start();
 
-  var timeLeft = 200
+  var timeLeft = 10
   var timer = setInterval(function () {
     timeLeft = timeLeft - 1;
     $timer.innerHTML = Math.floor(timeLeft / 60) + ":" + ("00" + (timeLeft % 60)).slice(-2)
@@ -147,6 +147,8 @@
     if (!$answer.value) return
     if (parseInt($answer.value) === question.answer) {
       nextQuestion()
+      timeLeft = 4
+      $timer.innerHTML = Math.floor(timeLeft / 60) + ":" + ("00" + (timeLeft % 60)).slice(-2)
     } else {
       clearInterval(timer)
       $timer.innerHTML = "<span style='color:red;font-size:128;'>" + question.text + " = " + question.answer + "</span>(not " + $answer.value + ")"

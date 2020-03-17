@@ -106,6 +106,7 @@
     $timer.innerHTML = Math.floor(timeLeft / 60) + ":" + ("00" + (timeLeft % 60)).slice(-2)
     if (timeLeft <= 0) {
       $timer.innerHTML = "<span style='color:red'>Time's Up!</span>"
+      $answer.remove()
       clearInterval(timer)
     }
   }, 1000)
@@ -151,8 +152,9 @@
       $timer.innerHTML = Math.floor(timeLeft / 60) + ":" + ("00" + (timeLeft % 60)).slice(-2)
     } else {
       clearInterval(timer)
+      $answer.remove()
       $timer.innerHTML = "<span style='color:red;font-size:128;'>" + question.text + " = " + question.answer + "</span>(not " + $answer.value + ")"
-      $answer.style = "display:none;"
+      recognition.stop()
     }
   }
   $answer.addEventListener("keydown", function (e) {

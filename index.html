@@ -8,6 +8,7 @@
 
     #timer {
       font-size: 48;
+      color: #666;
     }
 
     #question {
@@ -25,6 +26,11 @@
       font-size: 512;
     }
 
+    #progress {
+      font-size: 48;
+      color: #666;
+    }
+
     .timesUp {
       display: none;
     }
@@ -37,6 +43,7 @@
 
 <body>
   <span id="timer">3:20</span><br />
+  <span id="progress"></span><br />
   <span id="question"></span><br />
   <input id="answer" autocomplete="off" />
   <input id="restart" type="submit" value="restart" style="display:none" />
@@ -48,6 +55,7 @@
   var $timer = document.getElementById("timer")
   var $question = document.getElementById("question")
   var $answer = document.getElementById("answer")
+  var $progress = document.getElementById("progress")
 
   let finalTranscript = '';
   let recognition = new (window.webkitSpeechRecognition || window.SpeechRecognition)();
@@ -78,7 +86,6 @@
   var lastAnswer = null
   recognition.onresult = (event) => {
     var results = event.results[event.results.length - 1]
-    console.log(results)
     if (results.isFinal) return
     for (let i = 0; i < results.length; i++) {
       var transcript = results[i].transcript.trim(' ').split(' ').slice(-1)[0];
@@ -114,6 +121,7 @@
       questions.push(question)
     }
   }
+  var totalQuestions = questions.length
   for (var i = 0; i < questions.length; i++) {
     var j = Math.floor(Math.random() * (i + 1))
     var temp = questions[i]
@@ -132,6 +140,7 @@
       $question.innerHTML = question.text
       $answer.value = ''
     }
+    $progress.innerHTML = (totalQuestions - questions.length) + ' / ' + totalQuestions
   }
   nextQuestion()
   function checkAnswer() {

@@ -105,7 +105,7 @@
     timeLeft = timeLeft - 1;
     $timer.innerHTML = Math.floor(timeLeft / 60) + ":" + ("00" + (timeLeft % 60)).slice(-2)
     if (timeLeft <= 0) {
-      $timer.innerHTML = "<span style='color:red'>Time's Up!</span>"
+      $timer.innerHTML = "<span style='color:red'>Time's Up! (it was " + question.answer + ")</span>"
       $answer.remove()
       clearInterval(timer)
     }

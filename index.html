@@ -148,7 +148,7 @@
     if (!$answer.value) return
     if (parseInt($answer.value) === question.answer) {
       nextQuestion()
-      timeLeft = 5
+      timeLeft = 10
       $timer.innerHTML = Math.floor(timeLeft / 60) + ":" + ("00" + (timeLeft % 60)).slice(-2)
     } else {
       clearInterval(timer)

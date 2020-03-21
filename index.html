@@ -153,7 +153,7 @@
     } else {
       clearInterval(timer)
       $answer.remove()
-      $timer.innerHTML = "<span style='color:red;font-size:128;'>" + question.text + " = " + question.answer + "</span>(not " + $answer.value + ")"
+      $timer.innerHTML = "<span style='color:red;font-size:128'>" + question.text + " = " + question.answer + "</span>(not " + $answer.value + ")"
       recognition.stop()
     }
   }
